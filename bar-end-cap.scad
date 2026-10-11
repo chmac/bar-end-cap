@@ -3,13 +3,13 @@
 // end face is at z = 0.
 
 // --- Pipe ---
-pipe_inner_diameter = 22.5;   // mm
+pipe_inner_diameter = 21.9;   // mm
 pipe_outer_diameter = 28;   // mm
 
 // --- Plug (goes into the pipe) ---
 plug_depth_into_pipe = 20;  // mm
 plug_wall_thickness = 3;    // mm
-plug_fit_interference = 0;   // mm, how much larger the rib tips are than the pipe bore (per side)
+plug_fit_interference = 0.3;   // mm, how much larger the rib tips are than the pipe bore (per side)
 
 // --- Ribs (on the outside of the plug, gripping the pipe wall) ---
 rib_count = 6;
