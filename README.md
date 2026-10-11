@@ -23,11 +23,11 @@ Rendering is slow because `$fn = 256`. That's deliberate.
 | Group | Parameter | Meaning |
 | --- | --- | --- |
 | Pipe | `pipe_inner_diameter`, `pipe_outer_diameter` | Pipe dimensions in mm |
-| Plug | `plug_depth_into_pipe`, `plug_wall_thickness`, `plug_fit_clearance` | How deep the plug goes, its wall, and the gap between rib tips and the pipe wall |
+| Plug | `plug_depth_into_pipe`, `plug_wall_thickness`, `plug_fit_interference` | How deep the plug goes, its wall, and how far the rib tips exceed the pipe bore |
 | Ribs | `rib_count`, `rib_width`, `rib_height` | Gripping ribs on the outside of the plug |
 | Nose | `nose_straight_length`, `nose_taper_length`, `nose_tip_inset`, `nose_cap_thickness` | Shape of the part that sits outside the pipe |
 
-Defaults are for a 28 mm OD / 21.9 mm ID pipe. Test-fit and adjust `plug_fit_clearance` for your printer.
+Defaults are for a 28 mm OD / 21.9 mm ID pipe. Test-fit and adjust `plug_fit_interference` for your printer.
 
 ## License
 

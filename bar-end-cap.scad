@@ -3,18 +3,19 @@
 // end face is at z = 0.
 
 // --- Pipe ---
-pipe_inner_diameter = 21.9;   // mm
+pipe_inner_diameter = 22.5;   // mm
 pipe_outer_diameter = 28;   // mm
 
 // --- Plug (goes into the pipe) ---
 plug_depth_into_pipe = 20;  // mm
 plug_wall_thickness = 3;    // mm
-plug_fit_clearance = 0.2;   // mm, gap between rib tips and the pipe wall
+plug_fit_interference = 0;   // mm, how much larger the rib tips are than the pipe bore (per side)
 
 // --- Ribs (on the outside of the plug, gripping the pipe wall) ---
 rib_count = 6;
 rib_width = 2;              // mm, tangential; width well over 2x rib_height gives a soft curve
-rib_height = 1;             // mm, radial, how far the ribs stand out from the plug body
+rib_height = 0.65;             // mm, radial, how far the ribs stand out from the plug body
+rib_lead_in_length = 4;     // mm, ribs taper down to the plug body over this length at the insertion end
 
 // --- Nose (outside the pipe) ---
 nose_straight_length = 3;  // mm, at pipe_outer_diameter
@@ -28,7 +29,7 @@ nose_cap_thickness = 3;     // mm, solid material above the hollow at the tip
 
 $fn = 256;  // high accuracy; slow renders are fine
 
-rib_tip_radius = pipe_inner_diameter / 2 - plug_fit_clearance;
+rib_tip_radius = pipe_inner_diameter / 2 + plug_fit_interference;
 plug_outer_radius = rib_tip_radius - rib_height;
 plug_inner_radius = plug_outer_radius - plug_wall_thickness;
 // radius of the arc that is rib_width wide at the base and rib_height tall
