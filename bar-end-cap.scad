@@ -20,7 +20,7 @@ rib_height = 1;             // mm, radial, how far the ribs stand out from the p
 nose_straight_length = 3;  // mm, at pipe_outer_diameter
 nose_taper_length = 10;     // mm, shrinks down to the tip
 nose_tip_inset = 4;         // mm, how far the tip's edge sits in from the pipe's outer edge (one side, radial)
-nose_wall_thickness = 3;    // mm, must be less than nose_taper_length
+nose_cap_thickness = 3;     // mm, solid material above the hollow at the tip
 
 // ============================================================
 // Parameters end here. Nothing below this line is meant to be edited.
@@ -37,30 +37,19 @@ overlap = 0.01;             // avoids coincident faces in the union
 
 nose_outer_radius = pipe_outer_diameter / 2;
 nose_tip_radius = nose_outer_radius - nose_tip_inset;
-nose_cavity_radius = nose_outer_radius - nose_wall_thickness;
-nose_cavity_taper_length = nose_taper_length - nose_wall_thickness;
-// outside radius where the cavity stops, less the wall
-nose_cavity_tip_radius = nose_outer_radius
-    + (nose_tip_radius - nose_outer_radius) * nose_cavity_taper_length / nose_taper_length
-    - nose_wall_thickness;
+nose_length = nose_straight_length + nose_taper_length;
 
 module plug_body() {
     translate([0, 0, -plug_depth_into_pipe])
         cylinder(h = plug_depth_into_pipe + overlap, r = plug_outer_radius);
 }
 
-// One continuous cavity through the plug and the nose, open at the bottom.
+// One straight bore at the plug's inner radius, from the open bottom of the
+// plug up through the nose, stopping nose_cap_thickness short of the tip.
 module cavity() {
     translate([0, 0, -plug_depth_into_pipe - overlap])
-        cylinder(h = plug_depth_into_pipe + nose_straight_length + 2 * overlap,
+        cylinder(h = plug_depth_into_pipe + nose_length - nose_cap_thickness + overlap,
                  r = plug_inner_radius);
-    // nose straight section, widened to the nose wall
-    cylinder(h = nose_straight_length, r = nose_cavity_radius);
-    // nose taper, same slope as the outside, stopping nose_wall_thickness short of the tip
-    translate([0, 0, nose_straight_length - overlap])
-        cylinder(h = nose_cavity_taper_length + overlap,
-                 r1 = nose_cavity_radius,
-                 r2 = nose_cavity_tip_radius);
 }
 
 module plug_ribs() {
