@@ -56,13 +56,33 @@ module plug_ribs() {
     for (rib_index = [0 : rib_count - 1])
         rotate([0, 0, rib_index * 360 / rib_count])
             translate([0, 0, -plug_depth_into_pipe])
-                // circular arc through the base corners and the tip: a soft curve, not a semicircle
-                intersection() {
-                    translate([rib_tip_radius - rib_arc_radius, 0, 0])
-                        cylinder(h = plug_depth_into_pipe, r = rib_arc_radius);
-                    translate([plug_outer_radius - overlap, -rib_width / 2, 0])
-                        cube([rib_height + overlap, rib_width, plug_depth_into_pipe]);
+                if (rib_height <= rib_width / 2) {
+                    // circular arc through the base corners and the tip: a soft curve, not a semicircle
+                    intersection() {
+                        translate([rib_tip_radius - rib_arc_radius, 0, 0])
+                            cylinder(h = plug_depth_into_pipe, r = rib_arc_radius);
+                        translate([plug_outer_radius - overlap, -rib_width / 2, 0])
+                            cube([rib_height + overlap, rib_width, plug_depth_into_pipe]);
+                    }
+                } else {
+                    // taller than half the width: a semicircular tip on straight sides
+                    hull() {
+                        translate([rib_tip_radius - rib_width / 2, 0, 0])
+                            cylinder(h = plug_depth_into_pipe, r = rib_width / 2);
+                        translate([plug_outer_radius - overlap, -rib_width / 2, 0])
+                            cube([overlap, rib_width, plug_depth_into_pipe]);
+                    }
                 }
+}
+
+// Trims the ribs so they taper down to the plug body at the insertion end
+// (z = -plug_depth_into_pipe), making the cap easier to push in.
+module rib_lead_in_envelope() {
+    translate([0, 0, -plug_depth_into_pipe]) {
+        cylinder(h = rib_lead_in_length, r1 = plug_outer_radius, r2 = rib_tip_radius);
+        translate([0, 0, rib_lead_in_length - overlap])
+            cylinder(h = plug_depth_into_pipe - rib_lead_in_length + overlap, r = rib_tip_radius);
+    }
 }
 
 module nose() {
@@ -76,7 +96,10 @@ module nose() {
 difference() {
     union() {
         plug_body();
-        plug_ribs();
+        intersection() {
+            plug_ribs();
+            rib_lead_in_envelope();
+        }
         nose();
     }
     cavity();
