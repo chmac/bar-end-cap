@@ -1,6 +1,7 @@
 // Bar end cap: hollow ribbed plug that goes into the pipe, with a
-// straight-then-tapered nose that sits outside. Axis along Z, the pipe
-// end face is at z = 0.
+// straight-then-tapered nose that sits outside. Modelled with the axis along
+// Z and the pipe end face at z = 0, then flipped at the bottom of the file
+// into print orientation (nose tip on the bed, plug pointing up).
 
 // --- Pipe ---
 pipe_inner_diameter = 21.9;   // mm
@@ -94,14 +95,18 @@ module nose() {
                  r2 = nose_tip_radius);
 }
 
-difference() {
-    union() {
-        plug_body();
-        intersection() {
-            plug_ribs();
-            rib_lead_in_envelope();
+// Flipped for printing: the flat nose tip sits on the bed (z = 0) and the
+// open end of the plug points up.
+translate([0, 0, nose_length])
+    rotate([180, 0, 0])
+        difference() {
+            union() {
+                plug_body();
+                intersection() {
+                    plug_ribs();
+                    rib_lead_in_envelope();
+                }
+                nose();
+            }
+            cavity();
         }
-        nose();
-    }
-    cavity();
-}
